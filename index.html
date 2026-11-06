@@ -1,0 +1,426 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ahmed Nabil — Revit Dev</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Layout: an IDE window — file tabs as nav, terminal hero, each project is an open "file" with screenshots + code. Dark-first (night-shift IDE), light = drafting paper. */
+:root{
+  --bg:#0f1115; --panel:#171a21; --panel-2:#20242d; --line:#2a2f3a;
+  --ink:#eceef2; --muted:#9aa1ad;
+  --brand:#7c9cff; --brand-tint:#1c2a52; --code:#3ed6b5; --code-tint:#12322e; --accent:#ff8a4c;
+  --kw:#c49bff; --str:#e5c07b; --com:#6b7380; --grid:rgba(124,156,255,.07);
+  --display:"Space Grotesk","Inter",system-ui,sans-serif;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f6f5f1; --panel:#ecebe5; --panel-2:#e1dfd7; --line:#d6d4cc;
+  --ink:#16181d; --muted:#5b616e;
+  --brand:#1e47c8; --brand-tint:#dfe6fb; --code:#0f766e; --code-tint:#d5efea; --accent:#c2410c;
+  --kw:#7c3aed; --str:#8a5a00; --com:#6b7280; --grid:rgba(30,71,200,.08); color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#f6f5f1; --panel:#ecebe5; --panel-2:#e1dfd7; --line:#d6d4cc;
+  --ink:#16181d; --muted:#5b616e;
+  --brand:#1e47c8; --brand-tint:#dfe6fb; --code:#0f766e; --code-tint:#d5efea; --accent:#c2410c;
+  --kw:#7c3aed; --str:#8a5a00; --com:#6b7280; --grid:rgba(30,71,200,.08); color-scheme:light}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+a{color:var(--brand)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono)}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- top bar: editor tabs ---------- */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--panel);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:stretch;gap:16px;min-height:52px}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.logo i{width:10px;height:10px;border-radius:50%;background:var(--code);display:inline-block}
+.tabs{display:flex;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{display:flex;align-items:center;gap:6px;padding:0 14px;font-family:var(--mono);font-size:13px;color:var(--muted);text-decoration:none;border-right:1px solid var(--line);white-space:nowrap;border-top:2px solid transparent}
+.tabs a:first-child{border-left:1px solid var(--line)}
+.tabs a:hover{color:var(--ink);background:var(--panel-2)}
+.tabs a.on{color:var(--ink);background:var(--bg);border-top-color:var(--accent)}
+.tabs a .ext{color:var(--code)}
+.theme{align-self:center;min-width:44px;min-height:36px;background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:12px;cursor:pointer}
+.theme:hover{color:var(--ink)}
+
+/* ---------- hero ---------- */
+.hero{border-bottom:1px solid var(--line);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:16px 16px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px;align-items:center;padding-block:80px 72px}
+.hello{font-family:var(--mono);color:var(--code);font-size:14px;margin:0 0 12px}
+.hero h1{font-family:var(--display);font-size:clamp(44px,7vw,76px);line-height:1;letter-spacing:-.02em;margin:0 0 20px;text-wrap:balance}
+.hero h1 span{color:var(--brand)}
+.lead{font-size:19px;line-height:1.6;max-width:56ch;margin:0 0 28px;color:var(--ink)}
+.lead b{color:var(--code);font-weight:600}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:8px;font-family:var(--mono);font-size:14px;font-weight:500;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:transparent}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--bg)}
+.btn:hover{border-color:var(--brand)}
+
+.term{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-family:var(--mono);font-size:13.5px;line-height:1.75;min-width:0}
+.term-head{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--line);color:var(--muted);font-size:12px}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:var(--line);display:block}
+.term-body{padding:18px 20px;overflow-x:auto;white-space:pre;min-height:300px}
+.p{color:var(--code)}.c{color:var(--com)}.k{color:var(--kw)}.s{color:var(--str)}.b{color:var(--brand)}.a{color:var(--accent)}
+.cursor{display:inline-block;width:8px;height:1.1em;background:var(--code);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- section scaffolding ---------- */
+section.block{padding-block:88px 72px;border-bottom:1px solid var(--line)}
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;margin-bottom:32px}
+.head h2{font-family:var(--display);font-size:clamp(32px,4.5vw,48px);line-height:1.08;letter-spacing:-.015em;margin:6px 0 0;text-wrap:balance}
+.path{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.path b{color:var(--accent);font-weight:500}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:12px;font-weight:500;padding:4px 8px;border-radius:4px;background:var(--brand-tint);color:var(--brand)}
+.chip.code{background:var(--code-tint);color:var(--code)}
+
+/* ---------- project ---------- */
+.proj{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:32px;align-items:start}
+.shot{margin:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);cursor:zoom-in;padding:0;display:block;width:100%;text-align:left;color:inherit;font:inherit}
+.shot img{display:block;width:100%;height:auto;max-width:100%}
+.shot .cap{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted)}
+.shot:hover{border-color:var(--brand)}
+.thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.side{display:flex;flex-direction:column;gap:20px;min-width:0}
+.summary{font-size:17px;line-height:1.65;margin:0}
+.feat{list-style:none;margin:0;padding:16px 18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;font-family:var(--mono);font-size:13px;line-height:1.7;display:flex;flex-direction:column;gap:6px}
+.feat li::before{content:"// ";color:var(--com)}
+.feat li b{color:var(--ink);font-weight:500}
+.feat li{color:var(--muted)}
+
+.code{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel);min-width:0}
+.code-tab{display:flex;justify-content:space-between;gap:8px;padding:8px 12px;background:var(--panel-2);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted)}
+.code-tab b{color:var(--ink);font-weight:500}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:var(--ink)}
+
+.placeholder{aspect-ratio:16/9;max-width:100%;border:1px dashed var(--muted);border-radius:14px;display:grid;place-items:center;text-align:center;padding:24px;font-family:var(--mono);font-size:13px;color:var(--muted);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:16px 16px}
+.status{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;color:var(--accent)}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+/* ---------- skills / log ---------- */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}
+.log{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:14px;display:flex;flex-direction:column}
+.log li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.log .h{color:var(--accent)}
+.log .m{color:var(--ink)}
+.log .d{grid-column:2;color:var(--muted);font-family:var(--sans);font-size:14px}
+
+.contact{display:flex;flex-direction:column;gap:20px;padding-block:96px}
+.contact h2{font-family:var(--display);font-size:clamp(34px,5vw,56px);line-height:1.05;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.contact-row{display:flex;flex-wrap:wrap;gap:12px}
+.copy{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-family:var(--mono);font-size:14px;color:var(--ink);cursor:pointer}
+.copy span{color:var(--muted);font-size:12px}
+footer{border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:20px}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(5,7,10,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lb img{max-width:100%;max-height:82vh;border-radius:8px;border:1px solid #2a2f3a}
+.lb p{margin:0;color:#eceef2;font-family:var(--mono);font-size:13px;text-align:center}
+.lb button{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:calc(16px + env(safe-area-inset-right,0px));min-width:44px;min-height:44px;border-radius:8px;border:1px solid #2a2f3a;background:#171a21;color:#eceef2;font-family:var(--mono);cursor:pointer}
+
+@media (max-width:860px){
+  .hero .wrap,.proj,.two{grid-template-columns:minmax(0,1fr)}
+  .hero .wrap{padding-block:56px 48px;gap:32px}
+  .thumbs{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .shot .cap{display:none}
+  .thumbs .shot .cap{display:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cursor{animation:none}}
+</style>
+</head><body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="#top"><i></i>ahmed.nabil</a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#top" class="on"><span class="ext">C#</span> Program.cs</a>
+      <a href="#reviewer"><span class="ext">C#</span> ReviewerWizard.cs</a>
+      <a href="#roof"><span class="ext">C#</span> RoofCreator.cs</a>
+      <a href="#checker"><span class="ext">C#</span> ModelChecker.cs</a>
+      <a href="#kitchen"><span class="ext">C#</span> KitchenCreator.cs</a>
+      <a href="#stack"><span class="ext">{}</span> stack.json</a>
+      <a href="#contact"><span class="ext">@</span> contact.md</a>
+    </nav>
+    <button class="theme" id="themeBtn" type="button" aria-label="Switch light or dark theme">◐</button>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <p class="hello">&gt; Hello, World — I'm</p>
+      <h1>Ahmed Nabil<br><span>Revit API Developer</span></h1>
+      <p class="lead">I write <b>C# plugins for Revit</b> that automate the slow parts of BIM work: reviewing a whole model, generating roofs from walls, laying out kitchens. Before writing code I worked as an architectural Revit modeller and family creator, so every tool starts from a workflow I've done by hand.</p>
+      <div class="cta">
+        <a class="btn primary" href="#reviewer">View projects →</a>
+        <a class="btn" href="#contact">Contact me</a>
+      </div>
+    </div>
+    <div class="term" aria-label="Terminal summary">
+      <div class="term-head"><span class="dots"><i></i><i></i><i></i></span><span>PowerShell — ~/ahmed</span></div>
+<div class="term-body"><span class="p">PS&gt;</span> whoami
+Ahmed Nabil · Revit API &amp; BIM automation · Egypt
+
+<span class="p">PS&gt;</span> Get-Content profile.json
+{
+  <span class="b">"role"</span>:       <span class="s">"Revit plugin developer"</span>,
+  <span class="b">"background"</span>: <span class="s">"Architecture, 2017"</span>,
+  <span class="b">"modelling"</span>:  <span class="s">"Architectural Revit, US wood-frame"</span>,
+  <span class="b">"families"</span>:   <span class="s">"Parametric LOD 350–400 content"</span>,
+  <span class="b">"freelance"</span>:  <span class="s">"Paradigm (USA) — Digital Twin, 2021–2026"</span>,
+  <span class="b">"toolkit"</span>:    <span class="s">"ArchiUs — 22+ ribbon tools"</span>,
+  <span class="b">"languages"</span>:  [<span class="s">"C#"</span>, <span class="s">"XAML"</span>]
+}
+
+<span class="p">PS&gt;</span> ls ./projects
+<span class="a">ReviewerWizard</span>  <span class="a">RoofCreator</span>  <span class="a">ModelChecker</span>  <span class="a">KitchenCreator</span>
+
+<span class="p">PS&gt;</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+
+<!-- REVIEWER WIZARD -->
+<section class="block" id="reviewer">
+  <div class="head">
+    <div>
+      <div class="path">src/ArchiUs/<b>ReviewerWizard</b>.cs</div>
+      <h2>Reviewer Wizard</h2>
+    </div>
+    <div class="chips"><span class="chip">Model QA</span><span class="chip">Clash detection</span><span class="chip code">C#</span><span class="chip code">WPF</span><span class="chip code">Revit API</span></div>
+  </div>
+  <div class="proj">
+    <div>
+      <button class="shot" type="button" data-full="images/rw-main.jpg" data-cap="Reviewer Wizard: Check Location Line results"><img src="images/rw-main.jpg" alt="Reviewer Wizard main window with Check Location Line results" loading="lazy"><span class="cap"><span>main window · Check Location Line</span><span>click to enlarge</span></span></button>
+      <div class="thumbs">
+        <button class="shot" type="button" data-full="images/rw-clash.jpg" data-cap="Clash Detection: every clashing pair listed by element and type"><img src="images/rw-clash.jpg" alt="Clash Detection results" loading="lazy"><span class="cap"><span>clash detection</span></span></button>
+        <button class="shot" type="button" data-full="images/rw-clashbox.jpg" data-cap="Show in 3D: a temporary 3D view with a section box around the clash"><img src="images/rw-clashbox.jpg" alt="Clash isolated in a Revit 3D view with a section box" loading="lazy"><span class="cap"><span>show in 3D</span></span></button>
+        <button class="shot" type="button" data-full="images/rw-wallheight.jpg" data-cap="Check Wall Height: walls grouped by type, constraints and offsets"><img src="images/rw-wallheight.jpg" alt="Check Wall Height results table" loading="lazy"><span class="cap"><span>wall height</span></span></button>
+      </div>
+    </div>
+    <div class="side">
+      <p class="summary">A step-by-step QA review of the whole Revit model in one window. Each discipline has its own tab of checks, each check lists the elements that fail it, and one click shows any of them in 3D.</p>
+      <ul class="feat">
+        <li><b>Tabs</b> for walls, floors, roofs, structure, doors &amp; windows, ceilings, interior, exterior</li>
+        <li><b>Clash detection</b> with a section-box 3D view per clash</li>
+        <li><b>Wall checks</b>: location line, height, type, sill plate</li>
+        <li><b>Review progress</b> tracked across all checks</li>
+      </ul>
+      <div class="code">
+        <div class="code-tab"><b>ShowInSectionBox.cs</b><span>sketch</span></div>
+<pre><span class="k">var</span> box = element.get_BoundingBox(<span class="k">null</span>);
+box.Min -= pad; box.Max += pad;
+
+<span class="k">using</span> (<span class="k">var</span> t = <span class="k">new</span> Transaction(doc, <span class="s">"Clash Box"</span>))
+{
+    t.Start();
+    view3D.SetSectionBox(box);
+    view3D.IsolateElementsTemporary(ids);
+    t.Commit();
+}
+uidoc.ActiveView = view3D;</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROOF CREATOR -->
+<section class="block" id="roof">
+  <div class="head">
+    <div>
+      <div class="path">src/Modelling/<b>RoofCreator</b>.cs</div>
+      <h2>Roof Creator</h2>
+    </div>
+    <div class="chips"><span class="chip">Multiple plate heights</span><span class="chip">Ridge cap · Fascia</span><span class="chip code">ExternalEvent</span><span class="chip code">MVVM</span></div>
+  </div>
+  <div class="proj">
+    <div>
+      <button class="shot" type="button" data-full="images/roof-editor.jpg" data-cap="Visual Roof Plan Editor: per-edge slope, overhang and condition, with the generated roof"><img src="images/roof-editor.jpg" alt="Visual Roof Plan Editor beside the generated hip roof" loading="lazy"><span class="cap"><span>visual roof plan editor</span><span>click to enlarge</span></span></button>
+      <div class="thumbs">
+        <button class="shot" type="button" data-full="images/roof-3d.jpg" data-cap="Generated roof: hips, gables and overhangs from the edge table"><img src="images/roof-3d.jpg" alt="Generated roof in 3D" loading="lazy"><span class="cap"><span>generated roof</span></span></button>
+        <button class="shot" type="button" data-full="images/roof-ridge.jpg" data-cap="Roof Tools: ridge caps placed along every ridge and hip"><img src="images/roof-ridge.jpg" alt="Ridge caps created on the roof" loading="lazy"><span class="cap"><span>ridge cap</span></span></button>
+        <button class="shot" type="button" data-full="images/roof-fascia.jpg" data-cap="Roof Tools: fascia and soffit per edge"><img src="images/roof-fascia.jpg" alt="Fascia settings per edge" loading="lazy"><span class="cap"><span>fascia</span></span></button>
+      </div>
+    </div>
+    <div class="side">
+      <p class="summary">Pick one seed wall and the tool traces the connected walls, clusters them, and draws a live roof-plan preview. Set slope, overhang and hip or gable for each edge, then build the footprint roof and finish it with ridge caps and fascia.</p>
+      <ul class="feat">
+        <li><b>Trace seed wall</b> or select multiple walls</li>
+        <li><b>Per-edge table</b>: defines slope, slope, overhang, hip or gable</li>
+        <li><b>Floating WPF palette</b> driven by ExternalEvent</li>
+        <li><b>Roof Tools</b>: ridge cap and fascia with soffits</li>
+      </ul>
+      <div class="code">
+        <div class="code-tab"><b>FootprintBuilder.cs</b><span>sketch</span></div>
+<pre><span class="k">var</span> roof = doc.Create.NewFootPrintRoof(
+    footprint, level, roofType, <span class="k">out</span> <span class="k">var</span> map);
+
+<span class="k">foreach</span> (ModelCurve edge <span class="k">in</span> map)
+{
+    <span class="k">var</span> cfg = edges[edge.Id];
+    roof.set_DefinesSlope(edge, cfg.DefinesSlope);
+    roof.set_SlopeAngle(edge, cfg.Slope);
+    roof.set_Overhang(edge, cfg.Overhang);
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODEL CHECKER -->
+<section class="block" id="checker">
+  <div class="head">
+    <div>
+      <div class="path">src/Concepts/<b>ModelChecker</b>.cs · <span class="status">concept</span></div>
+      <h2>Model Checker</h2>
+    </div>
+    <div class="chips"><span class="chip">Code compliance</span><span class="chip">EBC 201</span><span class="chip code">Rule engine</span></div>
+  </div>
+  <div class="proj">
+    <button class="shot" type="button" data-full="images/model-checker.jpg" data-cap="Model Checker concept: code and rules configuration"><img src="images/model-checker.jpg" alt="Model Checker concept screen with rule sets" loading="lazy"><span class="cap"><span>code &amp; rules configuration</span><span>click to enlarge</span></span></button>
+    <div class="side">
+      <p class="summary">The next step after Reviewer Wizard: checks driven by building-code rule sets. Choose a country and code, such as the Egyptian Building Code, and each rule is tested against the model with the required and actual value side by side.</p>
+      <ul class="feat">
+        <li><b>Rule sets</b> by code, discipline and building type</li>
+        <li><b>Required vs actual</b> value for every failing element</li>
+        <li><b>Project-specific rules</b> layered on top of the code</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- KITCHEN -->
+<section class="block" id="kitchen">
+  <div class="head">
+    <div>
+      <div class="path">src/Interiors/<b>KitchenCreator</b>.cs · <span class="status">in development</span></div>
+      <h2>Kitchen Creator</h2>
+    </div>
+    <div class="chips"><span class="chip">Cabinet layout</span><span class="chip">Wall elevation</span><span class="chip code">WPF Canvas</span></div>
+  </div>
+  <div class="proj">
+    <div>
+      <button class="shot" type="button" data-full="images/kitchen-designer.jpg" data-cap="Kitchen Designer: family palette, wall elevation with live dimensions, segment strip and inspector (UI design)"><img src="images/kitchen-designer.jpg" alt="Kitchen Designer window with family palette, wall elevation editor, segments and inspector" loading="lazy"><span class="cap"><span>kitchen designer · UI design</span><span>click to enlarge</span></span></button>
+      <div class="thumbs">
+        <button class="shot" type="button" data-full="images/kitchen-ui.jpg" data-cap="Kitchen Cabinet Automation: wall elevation, segments, family preview and parameters (UI mockup)"><img src="images/kitchen-ui.jpg" alt="Kitchen Cabinet Automation window with wall elevation, segments list and parameter sliders" loading="lazy"><span class="cap"><span>layout window</span></span></button>
+      </div>
+    </div>
+    <div class="side">
+      <p class="summary">Select the walls of a kitchen and place cabinet families along their faces. A canvas-first editor shows the wall in plan or elevation, splits it into segments, and lets you drop a family and type into each one with live dimensions.</p>
+      <ul class="feat">
+        <li><b>Segment editor</b>: split, merge, lock, drag dividers</li>
+        <li><b>Plan / elevation</b> preview of the selected wall</li>
+        <li><b>Family palette</b> with types and parameters</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STACK + LOG -->
+<section class="block" id="stack">
+  <div class="head"><div><div class="path">config/<b>stack</b>.json · git log</div><h2>Stack &amp; path</h2></div></div>
+  <div class="two">
+    <div class="code">
+      <div class="code-tab"><b>stack.json</b><span>json</span></div>
+<pre>{
+  <span class="b">"languages"</span>: [<span class="s">"C#"</span>, <span class="s">"XAML"</span>],
+  <span class="b">"frameworks"</span>: [<span class="s">".NET"</span>, <span class="s">"WPF"</span>, <span class="s">"MVVM Toolkit"</span>],
+  <span class="b">"revit_api"</span>: [
+    <span class="s">"FilteredElementCollector"</span>,
+    <span class="s">"Transactions"</span>,
+    <span class="s">"ExternalEvent"</span>,
+    <span class="s">"Geometry &amp; BoundingBox"</span>,
+    <span class="s">"Families &amp; Parameters"</span>
+  ],
+  <span class="b">"bim"</span>: [<span class="s">"Architectural modelling"</span>, <span class="s">"Family creation"</span>, <span class="s">"Model QA"</span>],
+  <span class="b">"tools"</span>: [<span class="s">"Visual Studio"</span>, <span class="s">"Git"</span>, <span class="s">"GitHub"</span>]
+}</pre>
+    </div>
+    <ul class="log">
+      <li><span class="h">e5d8b72</span><span class="m">2021 – 2026 · Freelance — Paradigm (USA) · Digital Twin</span><span class="d">Worked as a freelancer with Paradigm, a US company, on its Digital Twin team.</span></li>
+      <li><span class="h">a1f3c09</span><span class="m">Revit API developer — ArchiUs toolkit</span><span class="d">22+ ribbon tools across multiple panels, PR reviews and QA guides.</span></li>
+      <li><span class="h">7be210d</span><span class="m">Architectural Revit Modeller — US wood-frame buildings</span><span class="d">Production modelling and documentation at a company office.</span></li>
+      <li><span class="h">3d7f5e0</span><span class="m">Revit Family Creator</span><span class="d">Parametric LOD 350–400 families: doors, windows, cabinets, furniture and lighting.</span></li>
+      <li><span class="h">4c9e2a1</span><span class="m">2022 · Freelance BIM</span><span class="d">Revit modelling for independent clients.</span></li>
+      <li><span class="h">0000001</span><span class="m">2017 · Initial commit: Architecture</span><span class="d">Graduated in architecture.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="path">docs/<b>contact</b>.md</div>
+  <h2>Have a Revit workflow that needs automating?</h2>
+  <p class="summary" style="color:var(--muted);max-width:56ch">Open to Revit API and BIM automation roles, remote or in Egypt.</p>
+  <div class="contact-row">
+    <button class="copy" type="button" data-copy="ben94nabil@gmail.com">ben94nabil@gmail.com <span>copy</span></button>
+    <a class="btn primary" href="mailto:ben94nabil@gmail.com">Send email</a>
+    <a class="btn" href="https://github.com/Ahmed10Nabil" target="_blank" rel="noopener">github.com/Ahmed10Nabil ↗</a>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer><div class="wrap"><span>© Ahmed Nabil</span><span>Build succeeded · 0 warnings · 0 errors</span></div></footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Screenshot">
+  <button type="button" id="lbClose" aria-label="Close">✕</button>
+  <img id="lbImg" alt="">
+  <p id="lbCap"></p>
+</div>
+
+<script>
+(function(){
+  // lightbox
+  var lb=document.getElementById('lb'),img=document.getElementById('lbImg'),cap=document.getElementById('lbCap');
+  document.querySelectorAll('.shot').forEach(function(b){
+    b.addEventListener('click',function(){img.src=b.dataset.full;img.alt=b.dataset.cap;cap.textContent=b.dataset.cap;lb.hidden=false;document.getElementById('lbClose').focus();});
+  });
+  function close(){lb.hidden=true;img.src='';}
+  document.getElementById('lbClose').addEventListener('click',close);
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  lb.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+
+  // copy
+  document.querySelectorAll('[data-copy]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=b.dataset.copy,s=b.querySelector('span');
+      function ok(){s.textContent='copied';setTimeout(function(){s.textContent='copy';},1500);}
+      try{navigator.clipboard.writeText(t).then(ok,function(){});}catch(e){}
+    });
+  });
+
+  // theme toggle
+  var root=document.documentElement;
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+    root.setAttribute('data-theme',cur==='dark'?'light':'dark');
+  });
+
+  // active tab
+  var links=[].slice.call(document.querySelectorAll('.tabs a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function onScroll(){
+    var y=window.scrollY+120,idx=0;
+    secs.forEach(function(s,i){if(s&&s.offsetTop<=y)idx=i;});
+    links.forEach(function(a,i){a.classList.toggle('on',i===idx);});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+</body></html>
