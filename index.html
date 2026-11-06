@@ -122,6 +122,23 @@ section.block{padding-block:88px 72px;border-bottom:1px solid var(--line)}
 footer{border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted)}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:20px}
 
+.sub{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:36px 0 14px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin-top:16px}
+.gal .shot img,.proj .shot img{background:#fff}
+.famgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.fam{margin:0;display:flex;flex-direction:column;gap:8px}
+.fam .shot{background:#fff}
+.fam figcaption{display:flex;flex-direction:column;font-size:13px;line-height:1.35}
+.fam figcaption b{font-weight:600}
+.fam figcaption span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.boards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:20px}
+.sheets{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:20px}
+.sheet{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.sheet.hero{grid-column:1/-1}
+.sheet .shot{background:#fff}
+.sheet figcaption{display:flex;gap:10px;align-items:baseline;font-size:13px}
+.sheet figcaption b{font-family:var(--mono);font-weight:500;color:var(--accent)}
+.sheet figcaption span{color:var(--muted)}
 /* lightbox */
 .lb{position:fixed;inset:0;z-index:50;background:rgba(5,7,10,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .lb img{max-width:100%;max-height:82vh;border-radius:8px;border:1px solid #2a2f3a}
@@ -148,6 +165,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       <a href="#roof"><span class="ext">C#</span> RoofCreator.cs</a>
       <a href="#checker"><span class="ext">C#</span> ModelChecker.cs</a>
       <a href="#kitchen"><span class="ext">C#</span> KitchenCreator.cs</a>
+      <a href="#drawings"><span class="ext">rvt</span> DrawingSet.rvt</a>
       <a href="#stack"><span class="ext">{}</span> stack.json</a>
       <a href="#contact"><span class="ext">@</span> contact.md</a>
     </nav>
@@ -330,6 +348,33 @@ uidoc.ActiveView = view3D;</pre>
   </div>
 </section>
 
+
+<!-- DRAWING SET -->
+<section class="block" id="drawings">
+  <div class="head">
+    <div>
+      <div class="path">models/<b>HotelInteriors</b>.rvt · A1 drawing set</div>
+      <h2>Revit Drawing Set</h2>
+    </div>
+    <div class="chips"><span class="chip">Architectural modelling</span><span class="chip">Interior documentation</span><span class="chip">Revit families</span></div>
+  </div>
+  <p class="summary" style="max-width:72ch;margin-bottom:28px">A 12-sheet A1 set for hotel corridors and guest rooms, all set up and exported from Revit 2024. It covers general arrangement plans, ceilings and lighting, interior and bathroom elevations, construction details and the loadable families used in the model. Views are laid out on a consistent grid and set to working scales from 1:5 to 1:100.</p>
+  <div class="sheets">
+    <figure class="sheet hero"><button class="shot" type="button" data-full="images/an-000.jpg" data-cap="AN-000 — Cover & drawing index"><img src="images/an-000.jpg" alt="Sheet AN-000: Cover & drawing index" loading="lazy"></button><figcaption><b>AN-000</b><span>Cover & drawing index</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-101.jpg" data-cap="AN-101 — Corridor C1 · general arrangement"><img src="images/an-101.jpg" alt="Sheet AN-101: Corridor C1 · general arrangement" loading="lazy"></button><figcaption><b>AN-101</b><span>Corridor C1 · general arrangement</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-102.jpg" data-cap="AN-102 — Corridor C1 · ceiling & elevations"><img src="images/an-102.jpg" alt="Sheet AN-102: Corridor C1 · ceiling & elevations" loading="lazy"></button><figcaption><b>AN-102</b><span>Corridor C1 · ceiling & elevations</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-103.jpg" data-cap="AN-103 — Corridor C2 · general arrangement"><img src="images/an-103.jpg" alt="Sheet AN-103: Corridor C2 · general arrangement" loading="lazy"></button><figcaption><b>AN-103</b><span>Corridor C2 · general arrangement</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-104.jpg" data-cap="AN-104 — Corridor C2 · ceiling & elevations"><img src="images/an-104.jpg" alt="Sheet AN-104: Corridor C2 · ceiling & elevations" loading="lazy"></button><figcaption><b>AN-104</b><span>Corridor C2 · ceiling & elevations</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-201.jpg" data-cap="AN-201 — King room · plans"><img src="images/an-201.jpg" alt="Sheet AN-201: King room · plans" loading="lazy"></button><figcaption><b>AN-201</b><span>King room · plans</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-202.jpg" data-cap="AN-202 — King room · interior elevations"><img src="images/an-202.jpg" alt="Sheet AN-202: King room · interior elevations" loading="lazy"></button><figcaption><b>AN-202</b><span>King room · interior elevations</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-203.jpg" data-cap="AN-203 — King room · bathroom elevations"><img src="images/an-203.jpg" alt="Sheet AN-203: King room · bathroom elevations" loading="lazy"></button><figcaption><b>AN-203</b><span>King room · bathroom elevations</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-301.jpg" data-cap="AN-301 — Mock-up room · plans"><img src="images/an-301.jpg" alt="Sheet AN-301: Mock-up room · plans" loading="lazy"></button><figcaption><b>AN-301</b><span>Mock-up room · plans</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-401.jpg" data-cap="AN-401 — Details · framing walls"><img src="images/an-401.jpg" alt="Sheet AN-401: Details · framing walls" loading="lazy"></button><figcaption><b>AN-401</b><span>Details · framing walls</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-402.jpg" data-cap="AN-402 — Details · ceiling & floor"><img src="images/an-402.jpg" alt="Sheet AN-402: Details · ceiling & floor" loading="lazy"></button><figcaption><b>AN-402</b><span>Details · ceiling & floor</span></figcaption></figure>
+    <figure class="sheet"><button class="shot" type="button" data-full="images/an-501.jpg" data-cap="AN-501 — Revit families"><img src="images/an-501.jpg" alt="Sheet AN-501: Revit families" loading="lazy"></button><figcaption><b>AN-501</b><span>Revit families</span></figcaption></figure>
+  </div>
+</section>
+
 <!-- STACK + LOG -->
 <section class="block" id="stack">
   <div class="head"><div><div class="path">config/<b>stack</b>.json · git log</div><h2>Stack &amp; path</h2></div></div>
@@ -347,6 +392,7 @@ uidoc.ActiveView = view3D;</pre>
     <span class="s">"Families &amp; Parameters"</span>
   ],
   <span class="b">"bim"</span>: [<span class="s">"Architectural modelling"</span>, <span class="s">"Family creation"</span>, <span class="s">"Model QA"</span>],
+  <span class="b">"software"</span>: [<span class="s">"Revit"</span>, <span class="s">"Navisworks"</span>],
   <span class="b">"tools"</span>: [<span class="s">"Visual Studio"</span>, <span class="s">"Git"</span>, <span class="s">"GitHub"</span>]
 }</pre>
     </div>
