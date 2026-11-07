@@ -90,6 +90,7 @@ section.block{padding-block:88px 72px;border-bottom:1px solid var(--line)}
 .shot .cap{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted)}
 .shot:hover{border-color:var(--brand)}
 .thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.thumbs.four{grid-template-columns:repeat(4,minmax(0,1fr))}
 .side{display:flex;flex-direction:column;gap:20px;min-width:0}
 .summary{font-size:17px;line-height:1.65;margin:0}
 .feat{list-style:none;margin:0;padding:16px 18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;font-family:var(--mono);font-size:13px;line-height:1.7;display:flex;flex-direction:column;gap:6px}
@@ -149,6 +150,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   .hero .wrap,.proj,.two{grid-template-columns:minmax(0,1fr)}
   .hero .wrap{padding-block:56px 48px;gap:32px}
   .thumbs{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .thumbs.four{grid-template-columns:repeat(2,minmax(0,1fr))}
   .shot .cap{display:none}
   .thumbs .shot .cap{display:none}
 }
@@ -166,6 +168,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       <a href="#checker"><span class="ext">C#</span> ModelChecker.cs</a>
       <a href="#kitchen"><span class="ext">C#</span> KitchenCreator.cs</a>
       <a href="#drawings"><span class="ext">rvt</span> DrawingSet.rvt</a>
+      <a href="#woodframe"><span class="ext">rvt</span> WoodFrame.rvt</a>
+      <a href="#coastal"><span class="ext">rvt</span> Coastal.rvt</a>
       <a href="#stack"><span class="ext">{}</span> stack.json</a>
       <a href="#contact"><span class="ext">@</span> contact.md</a>
     </nav>
@@ -204,6 +208,9 @@ Ahmed Nabil · Revit API &amp; BIM automation · Egypt
 
 <span class="p">PS&gt;</span> ls ./projects
 <span class="a">ReviewerWizard</span>  <span class="a">RoofCreator</span>  <span class="a">ModelChecker</span>  <span class="a">KitchenCreator</span>
+
+<span class="p">PS&gt;</span> ls ./models
+<span class="a">Hotel.rvt</span>  <span class="a">WoodFrame.rvt</span>  <span class="a">Coastal.rvt</span>
 
 <span class="p">PS&gt;</span> <span class="cursor"></span></div>
     </div>
@@ -372,6 +379,68 @@ uidoc.ActiveView = view3D;</pre>
     <figure class="sheet"><button class="shot" type="button" data-full="images/an-401.jpg" data-cap="AN-401 — Details · framing walls"><img src="images/an-401.jpg" alt="Sheet AN-401: Details · framing walls" loading="lazy"></button><figcaption><b>AN-401</b><span>Details · framing walls</span></figcaption></figure>
     <figure class="sheet"><button class="shot" type="button" data-full="images/an-402.jpg" data-cap="AN-402 — Details · ceiling & floor"><img src="images/an-402.jpg" alt="Sheet AN-402: Details · ceiling & floor" loading="lazy"></button><figcaption><b>AN-402</b><span>Details · ceiling & floor</span></figcaption></figure>
     <figure class="sheet"><button class="shot" type="button" data-full="images/an-501.jpg" data-cap="AN-501 — Revit families"><img src="images/an-501.jpg" alt="Sheet AN-501: Revit families" loading="lazy"></button><figcaption><b>AN-501</b><span>Revit families</span></figcaption></figure>
+  </div>
+</section>
+
+<!-- WOOD-FRAME RESIDENCE -->
+<section class="block" id="woodframe">
+  <div class="head">
+    <div>
+      <div class="path">models/<b>WoodFrameResidence</b>.rvt · Revit 2024</div>
+      <h2>US Wood-Frame Residence</h2>
+    </div>
+    <div class="chips"><span class="chip">LOD 350</span><span class="chip">Custom casework families</span><span class="chip">Presentation boards</span><span class="chip code">Revit</span></div>
+  </div>
+  <div class="proj">
+    <div>
+      <button class="shot" type="button" data-full="images/wf-p1.jpg" data-cap="Board P-1: exterior perspectives"><img src="images/wf-p1.jpg" alt="Presentation board with front and rear perspectives of a two-level wood-frame house" loading="lazy"><span class="cap"><span>P-1 · exterior renderings</span><span>click to enlarge</span></span></button>
+      <div class="thumbs four">
+        <button class="shot" type="button" data-full="images/wf-p3.jpg" data-cap="Board P-3: color-coded main level plan with room names and area summary"><img src="images/wf-p3.jpg" alt="Color-coded main level floor plan board" loading="lazy"><span class="cap"><span>main level</span></span></button>
+        <button class="shot" type="button" data-full="images/wf-p2.jpg" data-cap="Board P-2: color elevations"><img src="images/wf-p2.jpg" alt="Color elevations board" loading="lazy"><span class="cap"><span>elevations</span></span></button>
+        <button class="shot" type="button" data-full="images/wf-p5.jpg" data-cap="Board P-5: kitchen interiors and custom LOD 350 casework"><img src="images/wf-p5.jpg" alt="Kitchen interior renders board" loading="lazy"><span class="cap"><span>interiors</span></span></button>
+        <button class="shot" type="button" data-full="images/wf-p4.jpg" data-cap="Board P-4: lower level plan and building sections"><img src="images/wf-p4.jpg" alt="Lower level plan and sections board" loading="lazy"><span class="cap"><span>lower level</span></span></button>
+      </div>
+    </div>
+    <div class="side">
+      <p class="summary">A two-level US wood-frame home with a walk-out lower level, modelled in Revit from the permit drawings and taken toward LOD 350, then presented as a set of US-style 24×36 boards.</p>
+      <ul class="feat">
+        <li><b>Area</b>: main level 3,091 SF · lower level 2,826 SF</li>
+        <li><b>35 casework families</b>: shaker doors, drawer banks, toe kick, quartz top</li>
+        <li><b>Rooms</b> named and tagged from the plans, color-coded by use</li>
+        <li><b>Boards</b>: perspectives, color elevations, plans, sections, interiors</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- COASTAL RESIDENCE -->
+<section class="block" id="coastal">
+  <div class="head">
+    <div>
+      <div class="path">models/<b>CoastalResidence</b>.rvt · Revit 2024</div>
+      <h2>Three-Story Coastal Residence</h2>
+    </div>
+    <div class="chips"><span class="chip">3 floors + elevator</span><span class="chip">Parametric casework</span><span class="chip">Presentation boards</span><span class="chip code">Revit</span></div>
+  </div>
+  <div class="proj">
+    <div>
+      <button class="shot" type="button" data-full="images/cr-p1.jpg" data-cap="Board P-1: front and rear perspectives and a second-floor 3D cutaway"><img src="images/cr-p1.jpg" alt="Presentation board with perspectives of a three-story coastal house" loading="lazy"><span class="cap"><span>P-1 · exterior renderings</span><span>click to enlarge</span></span></button>
+      <div class="thumbs four">
+        <button class="shot" type="button" data-full="images/cr-p3.jpg" data-cap="Board P-3: color-coded first and second floor plans"><img src="images/cr-p3.jpg" alt="First and second floor plans board" loading="lazy"><span class="cap"><span>floor plans</span></span></button>
+        <button class="shot" type="button" data-full="images/cr-p2.jpg" data-cap="Board P-2: front and rear color elevations"><img src="images/cr-p2.jpg" alt="Color elevations board" loading="lazy"><span class="cap"><span>elevations</span></span></button>
+        <button class="shot" type="button" data-full="images/cr-p5.jpg" data-cap="Board P-5: kitchen with white perimeter cabinets and a navy island"><img src="images/cr-p5.jpg" alt="Kitchen interior board" loading="lazy"><span class="cap"><span>kitchen</span></span></button>
+        <button class="shot" type="button" data-full="images/cr-p4.jpg" data-cap="Board P-4: third floor plan and 3D cutaway"><img src="images/cr-p4.jpg" alt="Third floor plan and 3D cutaway board" loading="lazy"><span class="cap"><span>third floor</span></span></button>
+      </div>
+    </div>
+    <div class="side">
+      <p class="summary">An elevated three-story coastal home with garages at grade, main living and the master suite on the second floor, and a third-floor suite with wet bar and decks. Rooms were named from the permit plans and the model was presented as five boards.</p>
+      <ul class="feat">
+        <li><b>Area</b>: 1,678 + 2,402 + 1,142 SF conditioned · 800 SF garages</li>
+        <li><b>5 bedroom suites</b>, 7 baths, elevator and ocean-side decks</li>
+        <li><b>Casework</b>: parametric families coordinated with 48" range, hood and fridge</li>
+        <li><b>Boards</b>: perspectives, 3D cutaways, color plans, elevations, kitchen</li>
+      </ul>
+    </div>
   </div>
 </section>
 
